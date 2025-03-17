@@ -1,3 +1,4 @@
+print("Old harcore seek should be active")
 --MuscSeekaajs
 coroutine.wrap(function()
 function GitAud(soundgit,filename)
