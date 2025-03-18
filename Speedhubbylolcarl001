@@ -1,0 +1,82 @@
+-- Create the ScreenGui
+local player = game.Players.LocalPlayer
+local gui = Instance.new("ScreenGui")
+gui.Name = "SpeedGUI"
+gui.Parent = player.PlayerGui
+
+-- Create the main frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 200, 0, 130) -- Increased height to accommodate the TextBox
+frame.Position = UDim2.new(0.5, -100, 0.5, -65)
+frame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = gui
+
+-- Create the TextBox for input
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(0, 180, 0, 30)
+textBox.Position = UDim2.new(0, 10, 0, 10)
+textBox.PlaceholderText = "Enter Speed"
+textBox.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
+textBox.BorderSizePixel = 0
+textBox.TextColor3 = Color3.new(1, 1, 1)
+textBox.Text = ""
+textBox.Parent = frame
+
+-- Create the "Put Speed" button
+local putSpeedButton = Instance.new("TextButton")
+putSpeedButton.Size = UDim2.new(0, 180, 0, 30)
+putSpeedButton.Position = UDim2.new(0, 10, 0, 50)
+putSpeedButton.Text = "Put Speed"
+putSpeedButton.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
+putSpeedButton.BorderSizePixel = 0
+putSpeedButton.Parent = frame
+
+-- Create the "Change Speed" button
+local changeSpeedButton = Instance.new("TextButton")
+changeSpeedButton.Size = UDim2.new(0, 180, 0, 30)
+changeSpeedButton.Position = UDim2.new(0, 10, 0, 90)
+changeSpeedButton.Text = "Change Speed"
+changeSpeedButton.BackgroundColor3 = Color3.new(0.4, 0.4, 0.4)
+changeSpeedButton.BorderSizePixel = 0
+changeSpeedButton.Parent = frame
+
+-- Variable to store the speed
+local speed = 16
+
+-- Function to handle the "Put Speed" button click
+putSpeedButton.MouseButton1Click:Connect(function()
+    local input = tonumber(textBox.Text)
+    if input then
+        speed = input
+        putSpeedButton.Text = "Speed: " .. speed
+    else
+        putSpeedButton.Text = "Invalid Input"
+    end
+end)
+
+-- Function to handle the "Change Speed" button click
+changeSpeedButton.MouseButton1Click:Connect(function()
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = speed
+    end
+end)
+
+-- Ensure the GUI persists after death
+player.CharacterAdded:Connect(function()
+    -- Re-parent the GUI to the player's PlayerGui if it gets removed
+    if not gui.Parent then
+        gui.Parent = player.PlayerGui
+    end
+
+    -- Apply the speed to the new character
+    local character = player.Character
+    local humanoid = character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.WalkSpeed = speed
+    end
+end)
